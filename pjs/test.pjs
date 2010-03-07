@@ -1,0 +1,72 @@
+void setup() {
+  size(1024, 768);
+  drawAll();
+}
+
+void drawAll() {
+  background(#242934);
+  drawEdges();
+  drawPoints();
+}
+
+void drawPoints() {
+  for (int i = 0; i < data.coords.length; i++) {
+    point = data.coords[i];
+    noStroke();
+    ellipse(point[0] * width, point[1] * height, 5, 5);
+  }
+}
+
+void drawEdges() {
+  stroke(#363e4e);
+  for (int i = 0; i < data.edges.length; i++) {
+    edge = data.edges[i];
+    if (edge.isNext) {
+      continue;
+    }
+    drawEdge(edge);
+  }
+  stroke(#00b0f8);
+  for (int i = 0; i < data.edges.length; i++) {
+    edge = data.edges[i];
+    if (!edge.isNext) {
+      continue;
+    }
+    drawEdge(edge);
+  }
+}
+
+void drawEdge(edge) {
+  start = data.coords[edge[0]];
+  end = data.coords[edge[1]];
+  line(start[0] * width, start[1] * height, end[0] * width, end[1] * height);
+}
+
+hoveredPoint = null;
+
+void mouseMoved() {
+  for (int i = 0; i < data.coords.length; i++) {
+    coord = data.coords[i];
+    if (dist(mouseX, mouseY, coord[0] * width, coord[1] * height) < 10) {
+      if (coord != hoveredPoint) {
+        hoveredPoint = coord;
+        hoverPoint();
+      }
+      return;
+    }
+  }
+  if (hoveredPoint) {
+    unhoverPoint();
+    hoveredPoint = null;
+  }
+}
+
+void hoverPoint() {
+  console.log(hoveredPoint);
+  drawAll();
+  ellipse(hoveredPoint[0] * width, hoveredPoint[1] * height, 15, 15);
+}
+
+void unhoverPoint() {
+  drawAll();
+}
