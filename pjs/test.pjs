@@ -3,6 +3,42 @@ void setup() {
   drawAll();
 }
 
+void animate() {
+  background(#242934);
+  animating = setInterval(advance, 50);
+  pos = 1;
+}
+
+var pos;
+var animating = false;
+
+void toggleAnimation() {
+  if (animating) {
+    stopAnimation();
+  }
+  else {
+    animate();
+  }
+}
+
+void stopAnimation() {
+  clearInterval(animating);
+  animating = false;
+  drawAll();
+}
+
+void advance() {
+  if (pos == data.coords.length) {
+    stopAnimation();
+    return;
+  }
+  start = data.coords[pos - 1];
+  end = data.coords[pos];
+  stroke(#00b0f8);
+  line(start.x * width, start.y * height, end.x * width, end.y * height);
+  pos++;
+}
+
 void drawAll() {
   background(#242934);
   drawEdges();
@@ -46,6 +82,9 @@ hoveredPoint = null;
 zoom = false;
 
 void mouseMoved() {
+  if (animating) {
+    return;
+  }
   if (zoom) {
     background(#242934);
     pushMatrix();
@@ -73,6 +112,9 @@ void mouseMoved() {
 }
 
 void mouseClicked() {
+  if (animating) {
+    return;
+  }
   zoom = !zoom;
   drawAll();
 }

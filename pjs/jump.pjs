@@ -1,0 +1,32 @@
+var W = 900;
+var H = W;
+var P = 50;
+void setup() {
+
+  size(W + P * 2, H + P * 2);
+  background(#242934);
+  translate(P, P);
+  int y = H / 2 + .5;
+  float multiplier = W / data.coords.length;
+  stroke(#00b0f8);
+  noFill();
+  for (int i = 0; i < data.edges.length; i++) {
+    var edge = data.edges[i];
+    if (edge.isFirst && edge.sharedLength > 14) {
+      var start = edge[0] * multiplier;
+      var end = edge[1] * multiplier;
+      var width = end - start;
+      var center = start + width / 2;
+      if (width > 0) {
+        arc(center, y, width, width, PI, 0);
+      }
+      else {
+        arc(center, y, -width, -width, 0, PI);
+      }
+    }
+  }
+  var s = 800;
+
+  stroke(#ffffff);
+  line(0, y, W, y);
+}
