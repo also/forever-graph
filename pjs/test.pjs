@@ -13,7 +13,7 @@ void drawPoints() {
   for (int i = 0; i < data.coords.length; i++) {
     point = data.coords[i];
     noStroke();
-    ellipse(point[0] * width, point[1] * height, 5, 5);
+    ellipse(point.x * width, point.y * height, 2, 2);
   }
 }
 
@@ -39,32 +39,48 @@ void drawEdges() {
 void drawEdge(edge) {
   start = data.coords[edge[0]];
   end = data.coords[edge[1]];
-  line(start[0] * width, start[1] * height, end[0] * width, end[1] * height);
+  line(start.x * width, start.y * height, end.x * width, end.y * height);
 }
 
 hoveredPoint = null;
+zoom = false;
 
 void mouseMoved() {
-  for (int i = 0; i < data.coords.length; i++) {
-    coord = data.coords[i];
-    if (dist(mouseX, mouseY, coord[0] * width, coord[1] * height) < 10) {
-      if (coord != hoveredPoint) {
-        hoveredPoint = coord;
-        hoverPoint();
-      }
-      return;
-    }
+  if (zoom) {
+    background(#242934);
+    pushMatrix();
+    scale(3);
+    translate(-mouseX + width / 6, -mouseY + height / 6);
+    drawAll();
+    popMatrix();
   }
-  if (hoveredPoint) {
-    unhoverPoint();
-    hoveredPoint = null;
+  else {
+    for (int i = 0; i < data.coords.length; i++) {
+      coord = data.coords[i];
+      if (dist(mouseX, mouseY, coord.x * width, coord.y * height) < 10) {
+        if (coord != hoveredPoint) {
+          hoveredPoint = coord;
+          hoverPoint();
+        }
+        return;
+      }
+    }
+    if (hoveredPoint) {
+      unhoverPoint();
+      hoveredPoint = null;
+    }
   }
 }
 
-void hoverPoint() {
-  console.log(hoveredPoint);
+void mouseClicked() {
+  zoom = !zoom;
   drawAll();
-  ellipse(hoveredPoint[0] * width, hoveredPoint[1] * height, 15, 15);
+}
+
+void hoverPoint(keep) {
+  if (!keep) drawAll();
+  noStroke();
+  ellipse(hoveredPoint.x * width, hoveredPoint.y * height, 15, 15);
 }
 
 void unhoverPoint() {

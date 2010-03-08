@@ -22,5 +22,33 @@ for (var i = 0; i < data.edges.length; i++) {
   end.incoming.push(edge);
 }
 
+var maxX = 0;
+var maxY = 0;
+var minX = Number.MAX_VALUE;
+var minY = Number.MAX_VALUE;
+for (i = 0; i < data.coords.length; i++) {
+  var coord = data.coords[i];
+  var origPos = {x: coord[0], y: coord[1]};
+  if (origPos.x > maxX) {
+    maxX = origPos.x;
+  }
+  else if (origPos.x < minX) {
+    minX = origPos.x;
+  }
+  if (origPos.y > maxY) {
+    maxY = origPos.y;
+  }
+  else if (origPos.y < minY) {
+    minY = origPos.y;
+  }
+  coord.origPos = origPos;
+}
+
+for (i = 0; i < data.coords.length; i++) {
+  var coord = data.coords[i];
+  coord.x = (coord.origPos.x - minX) / (maxX - minX);
+  coord.y = (coord.origPos.y -minY) / (maxY - minY);
+}
+
 p.init(p.ajax('pjs/test.pjs'));
 </script>
